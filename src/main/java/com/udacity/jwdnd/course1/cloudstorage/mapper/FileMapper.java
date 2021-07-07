@@ -26,17 +26,14 @@ public interface FileMapper {
     File findFileByFileName(String fileName);
 
     @Select("SELECT * FROM files WHERE userid = #{userId}")
-    List<Note> findFilesByUserId(String userId);
-
-    @Select("SELECT * FROM files ORDER BY filename")
-    List<File> findAllFiles();
+    List<File> findFilesByUserId(Integer userId);
 
     @Insert("INSERT INTO files (filename, contenttype, filesize, userid, filedata) " +
             "VALUES(#{fileName}, #{contentType}, #{fileSize}, #{userId}, #{fileData})")
     @Options(useGeneratedKeys = true, keyProperty = "fileId")
     Integer insertFile(File file);
 
-    @Delete("DELETE FROM files WHERE fileid = #{fileId}")
-    Integer deleteFileById(Integer fileId);
+    @Delete("DELETE FROM files WHERE fileid = #{fileId} AND userid = #{userId}")
+    Integer deleteFileById(Integer fileId, Integer userId);
 
 }

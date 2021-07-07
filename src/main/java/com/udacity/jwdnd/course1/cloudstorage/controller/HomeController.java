@@ -25,19 +25,23 @@ public class HomeController {
     private final FileService fileService;
     private final NoteService noteService;
     private final CredentialService credentialService;
+    private final UserService userService;
 
-    public HomeController(FileService fileService, NoteService noteService, CredentialService credentialService) {
+    public HomeController(FileService fileService, NoteService noteService, CredentialService credentialService, UserService userService) {
         this.fileService = fileService;
         this.noteService = noteService;
         this.credentialService = credentialService;
+        this.userService = userService;
     }
 
     @GetMapping("/home")
-    public String homeView(Model model) {
+    public String homeView(Model model, Authentication authentication) {
 
-        model.addAttribute("fileList", fileService.getAllFiles());
-        model.addAttribute("noteList", noteService.getAllNotes());
-        model.addAttribute("credentialList", credentialService.getAllCredentials());
+        User user = userService.getUser(authentication.getName());
+
+        model.addAttribute("fileList", fileService.getAllFiles(user.getUserId()));
+        model.addAttribute("noteList", noteService.getAllNotes(user.getUserId()));
+        model.addAttribute("credentialList", credentialService.getAllCredentials(user.getUserId()));
 
         return "home";
     }

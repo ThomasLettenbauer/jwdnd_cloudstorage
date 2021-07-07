@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.data.File;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +32,11 @@ public class FileController {
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication, Model model) throws IOException {
         String uploadError = null;
+        int rowsAdded = 0;
+
+        if (fileUpload.getOriginalFilename().isEmpty()) {
+            uploadError = "The filename cannot be empty.";
+        }
 
         if (fileService.fileExists(fileUpload.getOriginalFilename())) {
             uploadError = "This filename already exists.";
@@ -38,16 +44,20 @@ public class FileController {
 
         if (uploadError == null) {
 
-            InputStream fis = fileUpload.getInputStream();
+            try {
 
-            //File(Integer fileId, String fileName, String contentType, String fileSize, Integer userId, byte[] fileData)
-            int rowsAdded = fileService.createFile(new File(null, fileUpload.getOriginalFilename(), fileUpload.getContentType(), String.valueOf(fileUpload.getSize()), userService.getUser(authentication.getName()).getUserId(),
+                InputStream fis = fileUpload.getInputStream();
+
+                //File(Integer fileId, String fileName, String contentType, String fileSize, Integer userId, byte[] fileData)
+                rowsAdded = fileService.createFile(new File(null, fileUpload.getOriginalFilename(), fileUpload.getContentType(), String.valueOf(fileUpload.getSize()), userService.getUser(authentication.getName()).getUserId(),
                         fis.readAllBytes()));
+            } catch (Exception ex) { uploadError = ex.getLocalizedMessage(); }
+
+            }
             System.out.println("***** File: " + fileUpload.getOriginalFilename());
             if (rowsAdded <= 0) {
-                uploadError = "There was an error uploading the file. Please try again.";
+                uploadError += " There was an error uploading the file. Please try again.";
             }
-        }
 
         if (uploadError == null) {
             model.addAttribute("uploadSuccess", true);
@@ -75,7 +85,7 @@ public class FileController {
     public String deleteFile(@PathVariable Integer fileId, Authentication authentication, Model model) {
 
         String uploadError = null;
-        Integer deletedFileId = fileService.deleteFileById(fileId);
+        Integer deletedFileId = fileService.deleteFileById(fileId, userService.getUser(authentication.getName()).getUserId());
 
         if (deletedFileId.equals(fileId)) {
             model.addAttribute("uploadSuccess", true);

@@ -24,14 +24,15 @@ public class NoteService {
         }
     }
 
-    public Integer deleteNote(Integer noteId) {
+    public Integer deleteNote(Integer noteId, Integer userId) {
 
-        return noteMapper.deleteNote(noteId);
+        return noteMapper.deleteNote(noteId, userId);
 
     }
 
-    public List<Note> getAllNotes() {
-        return noteMapper.findAllNotes();
+    public List<Note> getAllNotes(Integer userId) {
+
+        return noteMapper.findNotesByUserId(userId);
     }
 
 }

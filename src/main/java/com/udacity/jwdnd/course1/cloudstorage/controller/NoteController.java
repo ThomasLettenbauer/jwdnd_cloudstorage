@@ -43,11 +43,13 @@ public class NoteController {
     }
 
     @GetMapping("/note/delete/{noteId}")
-    public String deleteNote(@PathVariable Integer noteId, @ModelAttribute Note note, Model model) {
+    public String deleteNote(@PathVariable Integer noteId, @ModelAttribute Note note, Model model, Authentication authentication) {
 
         String uploadError = null;
 
-        if ( noteService.deleteNote(noteId) > 0 ) {
+        User user = userService.getUser(authentication.getName());
+
+        if ( noteService.deleteNote(noteId, user.getUserId()) > 0 ) {
             model.addAttribute("uploadSuccess", true);
         } else {
             model.addAttribute("uploadError", "There was an error deleting the note");

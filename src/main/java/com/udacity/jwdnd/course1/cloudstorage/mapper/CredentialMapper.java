@@ -25,13 +25,7 @@ public interface CredentialMapper {
     Credential findCredentialByCredentialId(Integer credentialId);
 
     @Select("SELECT * FROM credentials WHERE userid = #{userId}")
-    User findCredentialByUserId(Integer userId);
-
-    @Select("SELECT * FROM credentials ORDER BY credentialId")
-    List<Credential> findAllCredentials();
-
-    @Select("SELECT * FROM credentials WHERE username = #{userName}")
-    User findCredentialByUserName(String userName);
+    List<Credential> findCredentialsByUserId(Integer userId);
 
     @Insert("INSERT INTO credentials (url, username, key, password, userid) " +
             "VALUES(#{url}, #{userName}, #{key}, #{password}, #{userId})")

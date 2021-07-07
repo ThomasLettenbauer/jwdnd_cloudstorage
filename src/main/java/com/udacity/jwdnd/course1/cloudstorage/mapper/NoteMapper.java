@@ -21,7 +21,7 @@ public interface NoteMapper {
     Note findNoteByNoteId(int noteId);
 
     @Select("SELECT * FROM notes WHERE userid = #{userId}")
-    List<Note> findNotesByUserId(String userId);
+    List<Note> findNotesByUserId(Integer userId);
 
     @Select("SELECT * FROM notes ORDER BY noteId")
     List<Note> findAllNotes();
@@ -35,8 +35,8 @@ public interface NoteMapper {
             "WHERE noteid = #{noteId}")
     Integer updateNote(Note note);
 
-    @Delete("DELETE FROM notes WHERE noteid = #{noteId}")
-    Integer deleteNote(Integer noteId);
+    @Delete("DELETE FROM notes WHERE noteid = #{noteId} AND userid = #{userId}")
+    Integer deleteNote(Integer noteId, Integer userId);
 
 
 }

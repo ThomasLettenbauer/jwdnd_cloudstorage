@@ -3,7 +3,9 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.data.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.data.CredentialPassword;
 import com.udacity.jwdnd.course1.cloudstorage.data.Note;
+import com.udacity.jwdnd.course1.cloudstorage.data.User;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialMapper;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -56,11 +58,11 @@ public class CredentialService {
 
     }
 
-    public List<CredentialPassword> getAllCredentials() {
+    public List<CredentialPassword> getAllCredentials(Integer userId) {
 
         List<CredentialPassword> credentialPasswordList = new ArrayList<>();
 
-        List<Credential> credentialList = credentialMapper.findAllCredentials();
+        List<Credential> credentialList = credentialMapper.findCredentialsByUserId(userId);
 
         for (Credential credential : credentialList) {
             credentialPasswordList.add(new CredentialPassword(credential.getCredentialId(), credential.getUrl(), credential.getUserName(), credential.getKey(),

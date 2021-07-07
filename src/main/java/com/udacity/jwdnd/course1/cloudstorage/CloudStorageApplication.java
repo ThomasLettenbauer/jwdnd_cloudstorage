@@ -34,11 +34,6 @@ public class CloudStorageApplication {
 
 		Thread.sleep(1000);
 
-		WebElement loginLink = driver.findElement(By.id("login-link"));
-		loginLink.click();
-
-		Thread.sleep(1000);
-
 		WebElement loginUserName = driver.findElement(By.name("username"));
 		WebElement loginPassword = driver.findElement(By.name("password"));
 		WebElement loginSubmit = driver.findElement(By.id("submit-button"));

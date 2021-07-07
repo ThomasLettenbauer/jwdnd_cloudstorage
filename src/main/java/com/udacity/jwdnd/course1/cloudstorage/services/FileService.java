@@ -1,12 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.data.File;
-import com.udacity.jwdnd.course1.cloudstorage.data.User;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.FileMapper;
 import org.springframework.stereotype.Service;
-
-import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -28,16 +24,18 @@ public class FileService {
 
     }
 
-    public List<File> getAllFiles () {
-        return fileMapper.findAllFiles();
+    public List<File> getAllFiles (Integer userId) {
+
+        return fileMapper.findFilesByUserId(userId);
+
     }
 
     public File getFileById (Integer fileId) {
         return fileMapper.findFileByFileId(fileId);
     }
 
-    public Integer deleteFileById (Integer fileId) {
-        return fileMapper.deleteFileById(fileId);
+    public Integer deleteFileById (Integer fileId, Integer userId) {
+        return fileMapper.deleteFileById(fileId, userId);
     }
 
 }
