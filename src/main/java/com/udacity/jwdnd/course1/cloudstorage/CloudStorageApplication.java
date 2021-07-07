@@ -13,9 +13,6 @@ public class CloudStorageApplication {
 
 	public static void main(String[] args) throws InterruptedException {
 		SpringApplication.run(CloudStorageApplication.class, args);
-
-		simLogon();
-
 	}
 
 	static void simLogon() throws InterruptedException {
